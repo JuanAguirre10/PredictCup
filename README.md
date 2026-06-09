@@ -13,9 +13,20 @@ usuarios concurrentes** mediante una arquitectura escalable horizontalmente.
 
 | Recurso | Enlace |
 |---|---|
-| 📂 **Repositorio (GitHub)** | `https://github.com/____________________` |
-| 🐳 **Imágenes (Docker Hub)** | `https://hub.docker.com/u/____________________` |
-| ▶️ **Video explicativo (YouTube)** | `https://youtu.be/____________________` |
+| 📂 **Repositorio (GitHub)** | https://github.com/JuanAguirre10/PredictCup |
+| 🐳 **Imagen backend (Docker Hub)** | https://hub.docker.com/r/juan12211/predictcup-backend |
+| 🐳 **Imagen frontend (Docker Hub)** | https://hub.docker.com/r/juan12211/predictcup-frontend |
+| ▶️ **Video explicativo (YouTube)** | `https://youtu.be/TDuO0cjBxuM` |
+
+> ⚠️ **Las imágenes de Docker Hub por sí solas NO bastan para levantar el sistema.** Son los
+> dos servicios ya compilados (backend y frontend), pero **necesitan los archivos de
+> configuración y orquestación que están en este repositorio de GitHub**: `docker-compose.yml`,
+> la carpeta `nginx/` (config + certificado TLS), `monitoring/`, tu archivo `.env`, las llaves
+> JWT y el certificado. En otras palabras: **GitHub + Docker Hub se complementan** — las
+> imágenes son los programas, y el repo es la configuración para hacerlos funcionar juntos.
+>
+> Por eso, la forma recomendada de ejecutar el proyecto es **clonar este repositorio** y seguir
+> los pasos de [Instalación](#-instalación-y-configuración) y [Cómo ejecutar](#-cómo-ejecutar).
 
 ---
 
