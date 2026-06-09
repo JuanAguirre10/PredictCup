@@ -16,7 +16,7 @@ usuarios concurrentes** mediante una arquitectura escalable horizontalmente.
 | 📂 **Repositorio (GitHub)** | https://github.com/JuanAguirre10/PredictCup |
 | 🐳 **Imagen backend (Docker Hub)** | https://hub.docker.com/r/juan12211/predictcup-backend |
 | 🐳 **Imagen frontend (Docker Hub)** | https://hub.docker.com/r/juan12211/predictcup-frontend |
-| ▶️ **Video explicativo (YouTube)** | `https://youtu.be/TDuO0cjBxuM` |
+| ▶️ **Video explicativo (YouTube)** | https://youtu.be/TDuO0cjBxuM |
 
 > ⚠️ **Las imágenes de Docker Hub por sí solas NO bastan para levantar el sistema.** Son los
 > dos servicios ya compilados (backend y frontend), pero **necesitan los archivos de
