@@ -1,0 +1,108 @@
+# Stack completo de produccion: Nginx (TLS + balanceo) -> 3 replicas del backend
+# Quarkus -> PostgreSQL + Redis, frontend Next.js, y monitoreo (Prometheus + Grafana).
+# Variables sensibles en .env.  NOTA: el backend vive en ./PredictCup (no ./betting-backend).
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./PredictCup
+    deploy:
+      replicas: 3
+    env_file: .env
+    environment:
+      JAVA_OPTS: "-Xmx256m -Xms128m"
+    volumes:
+      # Avatares (modo storage local) compartidos por las 3 replicas.
+      - avatars:/data/avatars
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/q/health/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./betting-frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost}
+        NEXT_PUBLIC_DEV_LOGIN: ${NEXT_PUBLIC_DEV_LOGIN:-false}
+        NEXT_PUBLIC_FLAGS_BASE: ${NEXT_PUBLIC_FLAGS_BASE:-/flags}
+        NEXT_PUBLIC_FLAGS_EXT: ${NEXT_PUBLIC_FLAGS_EXT:-jpg}
+    env_file: .env
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file: .env
+    environment:
+      POSTGRES_DB: mundial_apuestas
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mundial}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --requirepass ${REDIS_PASSWORD:-redispass}
+      --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD:-redispass} ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards:ro
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:
+  avatars:

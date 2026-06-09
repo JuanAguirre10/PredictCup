@@ -1,0 +1,49 @@
+# ===== Secretos y credenciales (NUNCA subir) =====
+.env
+.env.local
+**/.env
+**/.env.local
+*.pem
+nginx/ssl/*.pem
+
+# ===== Archivos de IA / asistentes / skills (no son del proyecto) =====
+.claude/
+.agents/
+CLAUDE.md
+**/CLAUDE.md
+AGENTS.md
+**/AGENTS.md
+skills-lock.json
+docs/superpowers/
+
+# ===== Documentos y recursos no usados (no van al repo) =====
+*.pdf
+images/
+basededatosprototipo.sql
+
+# ===== Backend (Quarkus / Maven) =====
+target/
+**/target/
+
+# ===== Frontend (Next.js / Node) =====
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+*.tsbuildinfo
+
+# ===== Resultados de stress tests =====
+stress-tests/resultados/
+
+# ===== Avatares subidos en local =====
+avatars/
+**/avatars/
+
+# ===== OS / IDE =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+*.log

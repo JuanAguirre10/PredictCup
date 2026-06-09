@@ -1,0 +1,29 @@
+# Override de desarrollo: una sola replica del backend, puertos expuestos al host
+# y sin monitoreo. Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  app:
+    deploy:
+      replicas: 1
+    ports:
+      - "8080:8080"
+
+  frontend:
+    ports:
+      - "3000:3000"
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  # Sin Prometheus/Grafana en dev: se desactivan con perfiles vacios.
+  prometheus:
+    profiles: ["monitoring"]
+
+  grafana:
+    profiles: ["monitoring"]

@@ -1,0 +1,23 @@
+# Se construye desde el codigo fuente dentro de Docker (multi-stage: mvn package adentro).
+# Excluir solo lo que no debe entrar al contexto de build.
+# OJO: NO excluir src/main/resources/*.pem (las llaves JWT se empaquetan en la imagen).
+
+# Artefactos de build (se compilan dentro)
+target/
+
+# Secretos (las credenciales llegan por env en runtime, no en el build)
+.env
+.env.*
+
+# IA / asistentes / docs
+CLAUDE.md
+AGENTS.md
+README*.md
+
+# Git / IDE / logs
+.git/
+.gitignore
+.idea/
+*.iml
+.vscode/
+*.log

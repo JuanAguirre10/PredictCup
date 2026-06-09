@@ -1,0 +1,26 @@
+# El build hace npm ci + next build dentro de Docker: no enviar node_modules ni artefactos.
+# Las variables NEXT_PUBLIC_* llegan como build-args, no por .env.
+
+# Dependencias y artefactos (se generan dentro)
+node_modules
+.next
+out
+*.tsbuildinfo
+
+# Secretos
+.env
+.env.*
+
+# IA / asistentes / docs
+CLAUDE.md
+AGENTS.md
+README.md
+
+# Git / Docker / logs / IDE
+.git
+.gitignore
+Dockerfile
+.dockerignore
+npm-debug.log*
+.idea
+.vscode
